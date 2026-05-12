@@ -1,9 +1,9 @@
 id: review-only
 name: Review Only
 description: |
-  Paste a diff, draft, or text blob. Six reviewers (Codex + Gemini + Claude
-  + opencode-go Kimi + opencode-go DeepSeek + opencode-go Qwen) critique it
-  independently. Single pass — revise yourself and resubmit for another round.
+  Paste a diff, draft, or text blob. Three reviewers (Codex + Gemini +
+  Claude) critique it independently. Single pass — revise yourself and
+  resubmit for another round.
 author: chorus
 agreementThreshold: 0.66
 onThresholdMet: ask
@@ -22,7 +22,7 @@ phases:
   - id: review
     kind: review_only
     title: External Review
-    description: Five lineages critique the supplied artifact independently.
+    description: Three lineages critique the supplied artifact independently.
     reviewer:
       require: 2
       crossLineage: true
@@ -36,22 +36,6 @@ phases:
         - lineage: anthropic
           models:
             - claude-opus-4-7
-        # opencode-go transports — both run through the opencode binary
-        # (lineage=opencode). Different model families (Moonshot's Kimi
-        # vs DeepSeek) carried on the voice's vendor_family for diversity
-        # scoring, but both are listed under the opencode lineage because
-        # that's the binary that actually runs them. Listing kimi as
-        # `lineage: moonshot` would imply the standalone kimi-CLI
-        # subscription — an impossible combo for users without it.
-        - lineage: opencode
-          models:
-            - opencode-go/kimi-k2.6
-        - lineage: opencode
-          models:
-            - opencode-go/deepseek-v4-pro
-        - lineage: opencode
-          models:
-            - opencode-go/qwen3.6-plus
     artifact:
       label: "Artifact to review"
       hint: "Paste a unified diff, a markdown draft, code, or any text blob."
